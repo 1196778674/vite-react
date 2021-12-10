@@ -39,12 +39,17 @@ const App: FC = () => {
   const location = useLocation();
 
   const defaultActive = useMemo(
-    () => `${location.pathname === "/" ? "home" : location.pathname}`,
+    () =>
+      `${location.pathname === "/" ? "home" : location.pathname.split("/")[1]}`,
     [location]
   );
-
   const defaultSelectedKeys = useMemo(
-    () => `${location.pathname === "/" ? defaultActive : location.pathname}`,
+    () =>
+      `${
+        location.pathname === "/"
+          ? defaultActive
+          : location.pathname.split("/")[1]
+      }`,
     [location.pathname]
   );
 
@@ -57,7 +62,7 @@ const App: FC = () => {
   );
 
   useEffect(() => {
-    history(`${defaultActive}`);
+    location.pathname === "/" && history(`${defaultActive}`);
   }, []);
 
   return (
@@ -69,17 +74,17 @@ const App: FC = () => {
           mode="inline"
           defaultSelectedKeys={[defaultSelectedKeys]}
         >
-          <Menu.Item key="/home" icon={<UserOutlined />} onClick={changeMenu}>
+          <Menu.Item key="home" icon={<UserOutlined />} onClick={changeMenu}>
             欢迎页
           </Menu.Item>
           <Menu.Item
-            key="/2"
+            key="2"
             icon={<VideoCameraOutlined />}
             onClick={changeMenu}
           >
             页签一
           </Menu.Item>
-          <Menu.Item key="/3" icon={<UploadOutlined />} onClick={changeMenu}>
+          <Menu.Item key="3" icon={<UploadOutlined />} onClick={changeMenu}>
             页签二
           </Menu.Item>
         </MenuStyle>
