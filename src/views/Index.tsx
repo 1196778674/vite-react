@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 // 模板
 import Home from "./Home";

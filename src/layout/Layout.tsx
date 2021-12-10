@@ -1,6 +1,6 @@
-import React, { FC, useState, useCallback, useMemo } from "react";
+import React, { FC, useState, useCallback, useMemo, useEffect } from "react";
 import { Layout, Menu } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Route } from "react-router-dom";
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -34,18 +34,30 @@ const SiderStyle = styled(Sider)`
 `;
 
 const App: FC = () => {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed] = useState<boolean>(false);
 
-  const toggle = useCallback(() => {
-    setCollapsed(!collapsed);
-  }, [setCollapsed]);
+  const location = useLocation();
 
-  const pathname = window.location.pathname;
-  const defaultSelectedKeys = useMemo(() => `${pathname}`, []);
+  const defaultActive = useMemo(
+    () => `${location.pathname === "/" ? "home" : location.pathname}`,
+    [location]
+  );
+
+  const defaultSelectedKeys = useMemo(
+    () => `${location.pathname === "/" ? defaultActive : location.pathname}`,
+    [location.pathname]
+  );
 
   const history = useNavigate();
-  const changeMenu = useCallback((e) => {
-    history(`${e.key}`);
+  const changeMenu = useCallback(
+    (e) => {
+      history(`${e.key}`);
+    },
+    [history]
+  );
+
+  useEffect(() => {
+    history(`${defaultActive}`);
   }, []);
 
   return (
