@@ -1,5 +1,6 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, useMemo } from "react";
 import { Layout, Menu } from "antd";
+import { useNavigate } from "react-router-dom";
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -39,18 +40,34 @@ const App: FC = () => {
     setCollapsed(!collapsed);
   }, [setCollapsed]);
 
+  const pathname = window.location.pathname;
+  const defaultSelectedKeys = useMemo(() => `${pathname}`, []);
+
+  const history = useNavigate();
+  const changeMenu = useCallback((e) => {
+    history(`${e.key}`);
+  }, []);
+
   return (
     <LayoutStyle>
       <SiderStyle trigger={null} collapsible collapsed={collapsed}>
         <LogoStyle>小灰灰</LogoStyle>
-        <MenuStyle theme="light" mode="inline">
-          <Menu.Item key="1" icon={<UserOutlined />}>
+        <MenuStyle
+          theme="light"
+          mode="inline"
+          defaultSelectedKeys={[defaultSelectedKeys]}
+        >
+          <Menu.Item key="/home" icon={<UserOutlined />} onClick={changeMenu}>
             欢迎页
           </Menu.Item>
-          <Menu.Item key="2" icon={<VideoCameraOutlined />}>
+          <Menu.Item
+            key="/2"
+            icon={<VideoCameraOutlined />}
+            onClick={changeMenu}
+          >
             页签一
           </Menu.Item>
-          <Menu.Item key="3" icon={<UploadOutlined />}>
+          <Menu.Item key="/3" icon={<UploadOutlined />} onClick={changeMenu}>
             页签二
           </Menu.Item>
         </MenuStyle>
