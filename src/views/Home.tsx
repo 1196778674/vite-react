@@ -2,46 +2,38 @@ import React, { FC, useCallback } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { rootState } from "../store";
-import { IUser, IUserActionType } from "../store/reducer/user";
 import { Button } from "antd";
 
-type HomeProps = {
-  user: IUser;
-  changeName?: (name: string) => void;
-};
+import { add } from "../store/actions";
 
-const Home: FC<HomeProps> = (props) => {
-  const {
-    user: { name },
-    changeName,
-  } = props;
+interface IHomeProps {
+  count: number;
+  add: (n: number) => void;
+}
 
-  const changeNameFun = useCallback(() => {
-    changeName && changeName("test");
+const Home: FC<IHomeProps> = (props) => {
+  const { count, add } = props;
+
+  const addFun = useCallback(() => {
+    add(1);
   }, []);
 
   return (
     <div>
-      {name}
-      <br />
-      <Button type="primary" onClick={changeNameFun}>
-        change
+      <div>{count}</div>
+      <Button type="primary" onClick={addFun}>
+        加
       </Button>
     </div>
   );
 };
 
 const mapStateToProps = (state: rootState) => {
-  return { ...state.user };
+  return { ...state.test };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  changeName: (name: string) => {
-    dispatch({
-      type: IUserActionType.CHANGE,
-      payload: { name },
-    });
-  },
+  add: (num: number) => add(num),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

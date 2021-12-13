@@ -1,47 +1,39 @@
 import React, { FC, useCallback } from "react";
 import { connect } from "react-redux";
-import { rootState } from "../store";
 import { Dispatch } from "redux";
-import { IUser, IUserActionType } from "../store/reducer/user";
+import { rootState } from "../store";
 import { Button } from "antd";
 
-type Item1Props = {
-  user: { name: string };
-  initName?: (name: string) => void;
-};
+import { jian } from "../store/actions";
 
-const Item1: FC<Item1Props> = (props) => {
-  const {
-    user: { name },
-    initName,
-  } = props;
+interface ItemProps {
+  count: number;
+  jian: (n: number) => void;
+}
 
-  const InitFun = useCallback(() => {
-    initName && initName("普通用户");
+const Item1: FC<ItemProps> = (props) => {
+  const { count, jian } = props;
+
+  const jianFun = useCallback(() => {
+    jian(1);
   }, []);
 
   return (
     <div>
-      {name}
-      <br />
-      <Button type="primary" onClick={InitFun}>
-        Init
+      <div>{count}</div>
+      <Button type="primary" onClick={jianFun}>
+        减
       </Button>
     </div>
   );
 };
 
 const mapStateToProps = (state: rootState) => {
-  return { ...state.user };
+  return { ...state.test };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  initName: (name: string) => {
-    dispatch({
-      type: IUserActionType.CHANGE,
-      payload: { name },
-    });
-  },
+  jian: (num: number) => jian(num),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Item1);

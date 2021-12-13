@@ -1,9 +1,39 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { rootState } from "../store";
+import { Button } from "antd";
 
-type Item2Props = {};
+import { asyncAdd } from "../store/actions";
 
-const Item2: FC<Item2Props> = (props) => {
-  return <div>I am Item2</div>;
+interface ItemProps {
+  count: number;
+  asyncAdd: (n: number) => void;
+}
+
+const Item2: FC<ItemProps> = (props) => {
+  const { count, asyncAdd } = props;
+
+  const jianFun = useCallback(() => {
+    asyncAdd(1);
+  }, []);
+
+  return (
+    <div>
+      <div>{count}</div>
+      <Button type="primary" onClick={jianFun}>
+        异步+3
+      </Button>
+    </div>
+  );
 };
 
-export default Item2;
+const mapStateToProps = (state: rootState) => {
+  return { ...state.test };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  asyncAdd: () => asyncAdd(),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Item2);
